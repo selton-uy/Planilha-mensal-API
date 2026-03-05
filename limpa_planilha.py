@@ -1,14 +1,23 @@
+import ctypes
 import re
 import pandas as pd
 from tkinter import filedialog
 import tkinter as tk
+
+
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+except:
+    ctypes.windll.user32.SetProcessDPIAware()
+
 root = tk.Tk()
 root.withdraw()
-
+print('Selecione a planilha')
 caminho_do_arquivo = filedialog.askopenfilename(
-    title="Selecione a planilha para limpar",
-    filetypes=[("Arquivos de Excel", "*.xlsx *.xls"), ("Arquivos CSV", "*.csv")]
+    title="Selecione a planilha",
+    filetypes=[("Arquivos de Excel", "*.xlsx *.xls")]
 )
+
 def extrair_codigo(texto):
     if pd.isna(texto):
         return ""
