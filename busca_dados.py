@@ -13,9 +13,16 @@ headers_ejud = {
     "Origin": "https://www3.tjrj.jus.br",
     "Referer": "https://www3.tjrj.jus.br/ejud/ConsultaProcesso.aspx"
 }
+headers_processo = {
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/plain, */*",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Referer": "https://www3.tjrj.jus.br/consultaprocessual/",
+    "Origin": "https://www3.tjrj.jus.br"
+}
 
 
-def consultar_processo(numero_cnj):
+def consultar_processo_por_numero(numero_cnj):
     url_base = "https://www3.tjrj.jus.br/consultaprocessual/api/processos/por-numeracao-unica"
     payload_base = {"tipoProcesso": "1", "codigoProcesso": numero_cnj}
 
@@ -48,6 +55,46 @@ def consultar_processo(numero_cnj):
     except Exception:
         return None
 
+
+def consultar_processo_por_nome_e_data(nome, ano_inicio, ano_fim):
+    url_base = "https://www3.tjrj.jus.br/consultaprocessual/api/processos/por-nome-parte"
+
+    payload = {
+        "anoFinal": int(ano_fim),
+        "anoInicial": int(ano_inicio),
+        "isPortal": "S",
+        "isPortalDeServicos": 1,
+        "nome": nome.upper(),
+        "origem": "2",
+        "pIsProcAtivos": "N",
+        "radio": "1",
+        "secao": "RJ",
+        "tipoConsulta": "publica",
+        "tipoSegundaInstancia": "1",
+        "totalProcessoPesquisa": 300,
+        "validarSecao": True
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/plain, */*",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Referer": "https://www3.tjrj.jus.br/consultaprocessual/",
+        "Origin": "https://www3.tjrj.jus.br"
+    }
+
+    try:
+        response = session.post(url_base, json=payload, headers=headers)
+
+        if response.status_code == 200:
+            dados = response.json()
+            return dados
+        else:
+            print(f"Erro {response.status_code}: {response.text}")
+            return None
+    except Exception as e:
+        print(f"Erro na requisição: {e}")
+        return None
 
 def extrair_dados(dados):
     if not dados or not isinstance(dados, dict):

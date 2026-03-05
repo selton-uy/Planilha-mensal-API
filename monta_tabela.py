@@ -1,4 +1,17 @@
 from busca_dados import *
+import pandas as pd
+
+def criar_tabela():
+    colunas = [
+        'Data Publicação', 'Sequencial', 'Processo (padrão sistema vivo)', 'Parte autora',
+        'Módulo (JEC/VC)', 'Objeto ', 'Especificação do objeto', 'Advogado da parte',
+        'Observação (advogado)', 'Êxito', 'Avatar', 'Comarca', 'Juízo', 'Juiz',
+        'Recorrente (Vivo, Parte Autora, Ambos)', 'Turma/Câmara',
+        'Relator - Magistrado - 2ª Instância', 'Resultado - favorável ou desfavorável (para a Vivo)',
+        'OP', 'OF', 'Fundamentação principal'
+    ]
+    tabela = pd.DataFrame(columns=colunas)
+    tabela.to_excel('planilha_vazia.xlsx', index=False,)
 
 
 def pecorrer_tabela(tabela, coluna_codigo):
@@ -8,7 +21,7 @@ def pecorrer_tabela(tabela, coluna_codigo):
             if not codigo or codigo.lower() == 'nan':
                 continue
 
-            processo = consultar_processo(row[coluna_codigo])
+            processo = consultar_processo_por_numero(row[coluna_codigo])
             dados_processo = extrair_dados(processo)
 
             recorrente = str(dados_processo.get('RECORRENTE') or "").upper()
