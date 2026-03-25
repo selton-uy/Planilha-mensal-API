@@ -113,10 +113,10 @@ def extrair_dados(dados):
         texto_decisao = decisao[-1].get('Txt', '') if (decisao and isinstance(decisao, list)) else ''
 
         return {
-            'RECORRENTE': nome_recorrente,
-            'TURMA': info.get('OrgaoJulgador', ''),
-            'RELATOR': info.get('Relator', ''),
-            'SUMULA': texto_decisao
+            'RECORRENTE': nome_recorrente.strip(),
+            'TURMA': info.get('OrgaoJulgador', '').strip(),
+            'RELATOR': info.get('Relator', '').strip(),
+            'SUMULA': texto_decisao.strip()
         }
     except Exception:
         return {'RECORRENTE': '', 'TURMA': '', 'RELATOR': '', 'SUMULA': ''}
